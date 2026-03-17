@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from signal import get_signal
+from analysis import get_signal
 
 app = FastAPI()
 
