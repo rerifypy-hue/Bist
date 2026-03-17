@@ -3,7 +3,7 @@ import requests
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = "8377301703:AAEXlRxIzbMIB0A4yvKjvaXNWn2dkQjOMp4"
 API_URL = os.getenv("API_URL")
 
 async def sinyal(update: Update, context: ContextTypes.DEFAULT_TYPE):
