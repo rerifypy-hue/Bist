@@ -11,16 +11,26 @@ async def sinyal(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Kullanım: /sinyal THYAO")
         return
 
-    ticker = context.args[0]
+    ticker = context.args[0].upper()  # Büyük harf yap
+    try:
+        res = requests.get(f"{API_URL}/signal/{ticker}")
+        res.raise_for_status()  # HTTP hatalarını yakalar
+        data = res.json()
+    except requests.exceptions.RequestException:
+        await update.message.reply_text("API isteği sırasında bir hata oluştu.")
+        return
+    except ValueError:
+        await update.message.reply_text("API geçersiz JSON döndürdü.")
+        return
 
-    res = requests.get(f"{API_URL}/signal/{ticker}")
-    data = res.json()
+    signal = data.get("signal")
+    if signal:
+        await update.message.reply_text(f"{ticker} → {signal}")
+    else:
+        await update.message.reply_text(f"{ticker} için sinyal bulunamadı.")
 
-    await update.message.reply_text(
-        f"{ticker} → {data['signal']}"
-    )
-
-app = ApplicationBuilder().token(TOKEN).build()
-app.add_handler(CommandHandler("sinyal", sinyal))
-
-app.run_polling()
+if __name__ == "__main__":
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler("sinyal", sinyal))
+    print("Bot çalışıyor...")
+    app.run_polling()
